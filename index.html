@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <title>Game of Life</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.2/pixi.min.js"></script>
+    </head>
+    <body style="background: #aaaaaa;">
+        <h1>Game of Life</h1>
+        
+        <script>
+            var pixelSize = 10;
+            var canvasHeight = 40;
+            var canvasWith = 40;
+            
+            var matrix = fillMatrix(canvasWith, canvasHeight);
+            var nextMatrix = matrix;
+            
+            var anchientMatrix = [];
+            for(var x = 0; x < canvasWith; x++) {
+                anchientMatrix[x] = [];
+                for(var y = 0; y < canvasHeight; y++) {
+                    anchientMatrix[x][y] = 0;
+                }
+            }
+            
+            gameOfLife();
+            
+            function gameOfLife(){
+                var renderer = PIXI.autoDetectRenderer(canvasWith * pixelSize, canvasHeight * pixelSize);
+                renderer.backgroundColor = 0xffffff;
+                document.body.appendChild(renderer.view);
+
+                var stage = new PIXI.Container();
+
+                var graphics = new PIXI.Graphics();
+                stage.addChild(graphics);
+
+                initStage(stage, graphics);
+                
+                drawMatrix(graphics);
+
+                renderer.render(stage);
+            }
+            
+            function updateMatrix(){
+                
+            }
+            
+            function fillMatrix(canvasWith, canvasHeight){
+                var matrix = [];
+                for(var x = 0; x < canvasWith; x++) {
+                    matrix[x] = [];
+                    for(var y = 0; y < canvasHeight; y++) {
+                        var random = Math.random();
+                        matrix[x][y] = random < .3;
+                    } 
+                }
+                return matrix;
+            }
+            
+            function drawMatrix(graphics){
+                for(var x = 0; x < canvasWith; x++){
+                    for(var y = 0; y < canvasHeight; y++){
+                        drawCell(x, y, matrix[x][y], graphics);
+                    }
+                }
+            }
+            
+            function setMatrix(x, y, state){
+                matrix[x][y] = state;
+            }
+            
+            function getMatrix(x, y){
+                return matrix[x][y];
+            }
+            
+            function initStage(stage, graphics) {
+                graphics.lineStyle(1, 0xdddddd);
+                
+                for(var x = 0; x < canvasWith * pixelSize; x = x + pixelSize){
+                    for(var y = 0; y < canvasHeight * pixelSize; y = y + pixelSize){
+                        graphics.drawRect(x, y, pixelSize, pixelSize);
+                    } 
+                }
+            }
+            
+            function drawCell(x, y, alive, graphics){
+                var trueX = (x - 1) * pixelSize;
+                var trueY = (y - 1) * pixelSize;
+                
+                if(alive){
+                    graphics.beginFill(0x000000, 1);
+                    
+                } else {
+                    graphics.beginFill(0xFFFFFF, 1);
+                }
+                
+                graphics.drawRect(trueX, trueY, pixelSize, pixelSize);
+                graphics.endFIll;
+            }
+            
+        </script>
+    </body>
+</html>
